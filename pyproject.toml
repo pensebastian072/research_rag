@@ -1,0 +1,13 @@
+[project]
+name = "research-rag"
+version = "0.1.0"
+description = "Local RAG over finance/trading research papers and backtest data. Research/advisory only - no execution wiring."
+requires-python = ">=3.11"
+dependencies = [
+    "pymupdf>=1.24",
+    "numpy>=1.26",
+    "openpyxl>=3.1",
+]
+
+[tool.uv]
+package = false
