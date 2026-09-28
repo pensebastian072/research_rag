@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -51,7 +52,16 @@ def _post(endpoint: str, payload: dict, timeout: int = 300) -> dict:
         data=json.dumps(payload).encode("utf-8"),
         headers={"Content-Type": "application/json"},
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    try:
+        resp_ctx = urllib.request.urlopen(req, timeout=timeout)
+    except urllib.error.URLError as e:
+        if isinstance(getattr(e, "reason", None), ConnectionRefusedError) or "refused" in str(e).lower():
+            raise SystemExit(
+                f"\nCan't reach Ollama at {OLLAMA_URL}. Start it, then try again:\n"
+                f"  ollama serve\n  ollama pull {CHAT_MODEL}\n  ollama pull {EMBED_MODEL}\n"
+            ) from None
+        raise
+    with resp_ctx as resp:
         return json.loads(resp.read().decode("utf-8"))
 
 

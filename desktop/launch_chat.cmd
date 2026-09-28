@@ -1,6 +1,8 @@
 @echo off
 title Research RAG Chat
-cd /d C:\Users\<your-user>\research_rag
-.venv\Scripts\python.exe rag\chat.py
+REM Runs from wherever the repo was downloaded (was a hard-coded placeholder path).
+cd /d "%~dp0.."
+if exist .venv\Scripts\python.exe (set PY=.venv\Scripts\python.exe) else (set PY=python)
+%PY% rag\chat.py
 echo.
 pause
